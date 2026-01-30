@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Viewer</title>
+</head>
+<body>
+
+<h2>Viewer (Live)</h2>
+<button id="playBtn">Play Live Video</button>
+<br><br>
+<video id="remoteVideo" playsinline muted style="width:60%"></video>
+
+<script>
+const socket = new WebSocket("ws://localhost:3000");
+const pc = new RTCPeerConnection();
+const videoEl = document.getElementById("remoteVideo");
+
+socket.onopen = () => {
+  socket.send(JSON.stringify({ role: "viewer" }));
+};
+
+pc.ontrack = (e) => {
+  videoEl.srcObject = e.streams[0];
+};
+
+pc.onicecandidate = (e) => {
+  if (e.candidate) {
+    socket.send(JSON.stringify({
+      to: "producer",
+      type: "ice",
+      data: e.candidate
+    }));
+  }
+};
+
+socket.onmessage = async (e) => {
+  const msg = JSON.parse(e.data);
+
+  if (msg.type === "offer") {
+    await pc.setRemoteDescription(msg.data);
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+
+    socket.send(JSON.stringify({
+      to: "producer",
+      type: "answer",
+      data: answer
+    }));
+  }
+
+  if (msg.type === "ice") {
+    await pc.addIceCandidate(msg.data);
+  }
+};
+
+document.getElementById("playBtn").onclick = () => {
+  videoEl.play();
+};
+</script>
+
+</body>
+</html>

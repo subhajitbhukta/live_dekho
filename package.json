@@ -1,0 +1,29 @@
+{
+  "name": "mediasoup-live-streaming",
+  "version": "1.0.0",
+  "description": "Live streaming application using mediasoup and WebSocket",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "mediasoup",
+    "webrtc",
+    "live-streaming",
+    "websocket"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.22.1",
+    "mediasoup": "^3.19.15",
+    "mediasoup-client": "^3.18.5",
+    "socket.io": "^4.6.1",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "vite": "^7.3.1"
+  }
+}
