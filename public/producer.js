@@ -2,7 +2,8 @@ import * as mediasoupClient from "mediasoup-client";
 
 console.log("producer.js loaded");
 
-const socket = new WebSocket("ws://localhost:3000");
+const socket = new WebSocket("wss://live-dekho.onrender.com");
+
 
 let device;
 let transport;
